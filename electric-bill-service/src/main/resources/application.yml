@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: electric-bill-service
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+external-services:
+  electricity-provider:
+    url: http://toxiproxy:6000
