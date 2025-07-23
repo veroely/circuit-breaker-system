@@ -1,0 +1,8 @@
+{
+  "reference": "123456789012",
+  "customerIdentificacion":"1730502048",
+  "customerName":"PEREZ MORA DANIEL",
+  "amount": 870.50,
+  "dueDate": "2025-05-30",
+  "status":"PENDING"
+}
