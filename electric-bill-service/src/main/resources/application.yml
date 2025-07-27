@@ -11,7 +11,7 @@ feign:
 
 external-services:
   electricity-provider:
-    url: http://localhost:8080
+    url: http://toxyproxy:9090
 
 server:
-  port: 5000
+  port: 9292

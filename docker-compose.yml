@@ -1,5 +1,18 @@
 services:
   #====================================================
+  # ARQUITECTURA INTERNA (TU EMPRESA)
+  #====================================================
+  electric-bill-service:
+    build: ./electric-bill-service
+    environment:
+      EXTERNAL_API_URL: http://toxiproxy:9090
+    ports:
+      - "9292:9292"
+    networks:
+      - internal-net
+    depends_on:
+      - toxiproxy
+  #====================================================
   # PUENTE HACIA EL EXTERIOR
   #====================================================
 
