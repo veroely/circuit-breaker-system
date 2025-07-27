@@ -12,7 +12,6 @@ services:
     networks:
       - internal-net
       - external-net
-
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
   #====================================================
@@ -23,9 +22,8 @@ services:
     volumes:
       - ./external-api/mappings:/home/wiremock/mappings
       - ./external-api/__files:/home/wiremock/__files  
-    # lo hacemos accesible para otros contenedores en la misma red (Toxiproxy).
-    expose:
-      - "8080"
+    ports:
+      - "8080:8080"
     networks:
       - external-net
 
