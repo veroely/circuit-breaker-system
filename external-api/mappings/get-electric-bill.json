@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/api/electricity/bill/{number}"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "get-electric-bill-success.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

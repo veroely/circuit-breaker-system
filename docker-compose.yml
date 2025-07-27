@@ -1,0 +1,39 @@
+services:
+  #====================================================
+  # PUENTE HACIA EL EXTERIOR
+  #====================================================
+
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:latest
+    container_name: toxiproxy-api
+    ports:
+      - "8474:8474" # API para controlar Toxiproxy
+      - "6000:6000"
+    networks:
+      - internal-net
+      - external-net
+
+  #====================================================
+  # ARQUITECTURA EXTERNA (OTRA EMPRESA)
+  #====================================================
+
+  wiremock:
+    image: wiremock/wiremock:latest
+    container_name: wiremock-external-api
+    volumes:
+      - ./external-api/mappings:/home/wiremock/mappings
+      - ./external-api/__files:/home/wiremock/__files  
+    # lo hacemos accesible para otros contenedores en la misma red (Toxiproxy).
+    expose:
+      - "8080"
+    networks:
+      - external-net
+
+#====================================================
+# DEFINICIÓN DE REDES
+#====================================================
+networks:
+  internal-net:
+    driver: bridge
+  external-net:
+    driver: bridge
