@@ -12,6 +12,10 @@ services:
     networks:
       - internal-net
       - external-net
+    volumes:
+      - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
+    command:
+      - "-config=/etc/toxiproxy/config.json"
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
   #====================================================
