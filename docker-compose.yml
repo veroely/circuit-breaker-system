@@ -7,7 +7,7 @@ services:
     environment:
       EXTERNAL_API_URL: http://toxiproxy:9090
     ports:
-      - "9292:9292"
+      - "5000:5000"
     networks:
       - internal-net
     depends_on:
@@ -21,14 +21,14 @@ services:
     container_name: toxiproxy-api
     ports:
       - "8474:8474" # API para controlar Toxiproxy
-      - "9090:9090"
+      - "6000:6000"
     networks:
       - internal-net
       - external-net
-    volumes:
-      - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
-    command:
-      - "-config=/etc/toxiproxy/config.json"
+    # volumes:
+    #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
+    # command:
+    #   - "-config=/etc/toxiproxy/config.json"
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
   #====================================================
@@ -39,8 +39,10 @@ services:
     volumes:
       - ./external-api/mappings:/home/wiremock/mappings
       - ./external-api/__files:/home/wiremock/__files  
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
+    expose:
+      - "8080"
     networks:
       - external-net
 

@@ -7,5 +7,5 @@ RUN gradle build --no-daemon
 FROM openjdk:21-jdk
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
-EXPOSE 9292
+EXPOSE 5000
 ENTRYPOINT ["java", "-jar","/app/app.jar"]
