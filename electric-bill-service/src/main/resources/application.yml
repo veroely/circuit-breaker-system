@@ -12,3 +12,6 @@ feign:
 external-services:
   electricity-provider:
     url: http://toxiproxy:6000
+
+server:
+  port: 5000

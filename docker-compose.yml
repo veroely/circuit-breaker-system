@@ -1,5 +1,39 @@
 services:
   #====================================================
+  # ARQUITECTURA INTERNA (TU EMPRESA)
+  #====================================================
+  electric-bill-service:
+    build: ./electric-bill-service
+    environment:
+      EXTERNAL_API_URL: http://toxiproxy:9090
+    ports:
+      - "5000:5000"
+    networks:
+      - internal-net
+    depends_on:
+      - toxiproxy
+
+  #====================================================
+  # MONITOREO
+  #====================================================
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+
+  #====================================================
   # PUENTE HACIA EL EXTERIOR
   #====================================================
 
@@ -12,7 +46,10 @@ services:
     networks:
       - internal-net
       - external-net
-
+    # volumes:
+    #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
+    # command:
+    #   - "-config=/etc/toxiproxy/config.json"
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
   #====================================================
@@ -23,7 +60,8 @@ services:
     volumes:
       - ./external-api/mappings:/home/wiremock/mappings
       - ./external-api/__files:/home/wiremock/__files  
-    # lo hacemos accesible para otros contenedores en la misma red (Toxiproxy).
+    # ports:
+    #   - "8080:8080"
     expose:
       - "8080"
     networks:
