@@ -8,13 +8,10 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ElectricMapper {
-    @Mapping(target = "reference", source = "reference")
-    @Mapping(target = "amount", source = "amount")
+
     @Mapping(target = "dueDate", source = "dueDate", dateFormat = "yyyy-MM-dd")
     ElectricBill toElectricBill(ElectricBillResponse billResponse);
 
-    @Mapping(target = "reference", source = "reference")
-    @Mapping(target = "amount", source = "amount")
     @Mapping(target = "dueDate", source = "dueDate", dateFormat = "yyyy-MM-dd")
     ElectricBillResponse toElectricBillResponse(ElectricBill bill);
 }
