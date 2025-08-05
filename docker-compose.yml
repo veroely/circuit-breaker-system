@@ -2,6 +2,17 @@ services:
   #====================================================
   # ARQUITECTURA INTERNA (TU EMPRESA)
   #====================================================
+  payment-management-service:
+    build: ./payment-management-service
+    environment:
+      EXTERNAL_API_URL: http://electric-bill-service:9090
+    ports:
+      - "9050:9050"
+    networks:
+      - internal-net
+    depends_on:
+      - electric-bill-service
+
   electric-bill-service:
     build: ./electric-bill-service
     environment:

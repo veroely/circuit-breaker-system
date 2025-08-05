@@ -4,9 +4,8 @@ spring:
 
 
 microservices:
-  electricity-bill-service:
-    #url: "http://electricity-bill-service:5000"
-    url: "http://localhost:5000"
+  electric-bill-service:
+    url: "http://electric-bill-service:5000"
 
 server:
   port: 9050

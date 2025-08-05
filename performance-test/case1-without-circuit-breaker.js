@@ -7,12 +7,19 @@ export const options = {
 }
 //Verificar que el Circuit Breaker no interfiere cuando el servicio externo funciona correctamente
 export default function () {
-    const url = 'http://localhost:5000/api/electricity/P01/bill/123456789012';
+    const url = 'http://localhost:9050/api/payment/getBill';
     const headers = {
         'x-cm-client-request-id': '123',
-        'x-cm-client-user-agent': '123'
+        'x-cm-client-user-agent': '123',
+        'Content-Type': 'application/json'
     };
-    const res = http.get(url, { headers });
+    const body = {
+        "idClient": "CLI01",
+        "idService": "ELECTRICIDAD01",
+        "referenceNumber": "123456789"
+    };
+    const payload = JSON.stringify(body);
+    const res = http.post(url, payload, { headers });
     check(res, { 'status is 200': (r) => r.status === 200 });
     sleep(1);
 }
