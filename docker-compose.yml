@@ -5,7 +5,7 @@ services:
   payment-management-service:
     build: ./payment-management-service
     environment:
-      EXTERNAL_API_URL: http://electric-bill-service:9090
+      EXTERNAL_API_URL: http://electric-bill-service:5000
     ports:
       - "9050:9050"
     networks:
