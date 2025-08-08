@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: payment-management-service
+
+
+microservices:
+  electric-bill-service:
+    url: "http://electric-bill-service:5000"
+
+server:
+  port: 9050
