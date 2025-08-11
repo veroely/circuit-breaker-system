@@ -32,7 +32,6 @@ management:
 
 external-services:
   electricity-provider:
-    #url: http://localhost:6000
     url: http://toxiproxy:6000
 
 server:
