@@ -46,6 +46,10 @@ services:
       - prometheus
     networks:
       - internal-net
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+
       
   #====================================================
   # PUENTE HACIA EL EXTERIOR
@@ -89,3 +93,6 @@ networks:
     driver: bridge
   external-net:
     driver: bridge
+
+volumes:
+  grafana-data:
