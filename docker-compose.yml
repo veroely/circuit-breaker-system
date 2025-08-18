@@ -1,6 +1,6 @@
 services:
   #====================================================
-  # ARQUITECTURA INTERNA (TU EMPRESA)
+  # ARQUITECTURA INTERNA (MI EMPRESA)
   #====================================================
   payment-management-service:
     build: ./payment-management-service
@@ -68,6 +68,7 @@ services:
     #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
     # command:
     #   - "-config=/etc/toxiproxy/config.json"
+  
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
   #====================================================
