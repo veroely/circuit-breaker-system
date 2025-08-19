@@ -6,8 +6,8 @@ feign:
   client:
     config:
       default:
-        connectTimeout: ${FEIGN_CONNECT_TIMEOUT:5000}
-        readTimeout: ${FEIGN_READ_TIMEOUT:5000}
+        connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
+        readTimeout: ${FEIGN_READ_TIMEOUT:3000}
 
 management:
   endpoints:

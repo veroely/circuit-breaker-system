@@ -2,6 +2,12 @@ spring:
   application:
     name: payment-management-service
 
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
+        readTimeout: ${FEIGN_READ_TIMEOUT:3000}
 
 microservices:
   electric-bill-service:
