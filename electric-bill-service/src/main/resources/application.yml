@@ -1,18 +1,46 @@
+server:
+  port: 5000
+
 spring:
   application:
     name: electric-bill-service
-
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: ${FEIGN_CONNECT_TIMEOUT:21000}
+            readTimeout: ${FEIGN_READ_TIMEOUT:21000}
 
 external-services:
   electricity-provider:
-    #url: http://localhost:6000
-    url: http://toxiproxy:6000
+    url: ${EXTERNAL_PROVIDER_URL:http://toxiproxy:6000}
 
-server:
-  port: 5000
+#monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        http.client.requests: true
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:local}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+logging:
+  level:
+    feign: DEBUG
+    feign.client: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+

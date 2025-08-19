@@ -1,11 +1,17 @@
+server:
+  port: 9050
+
 spring:
   application:
     name: payment-management-service
-
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
+            readTimeout: ${FEIGN_READ_TIMEOUT:3000}
 
 microservices:
   electric-bill-service:
-    url: "http://electric-bill-service:5000"
-
-server:
-  port: 9050
+    url: ${MICROSERVICE_ELECTRIC_BILL_URL:http://electric-bill-service:5000}

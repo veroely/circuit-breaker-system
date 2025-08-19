@@ -1,28 +1,33 @@
 services:
   #====================================================
-  # ARQUITECTURA INTERNA (TU EMPRESA)
+  # ARQUITECTURA INTERNA (MI EMPRESA)
   #====================================================
   payment-management-service:
     build: ./payment-management-service
-    environment:
-      EXTERNAL_API_URL: http://electric-bill-service:5000
     ports:
       - "9050:9050"
     networks:
       - internal-net
     depends_on:
       - electric-bill-service
+    environment:
+      - MICROSERVICE_ELECTRIC_BILL_URL=${ELECTRIC_BILL_URL}
+      - FEIGN_CONNECT_TIMEOUT=${CONNECT_TIMEOUT_MS02}
+      - FEIGN_READ_TIMEOUT=${READ_TIMEOUT_MS02}      
 
   electric-bill-service:
     build: ./electric-bill-service
-    environment:
-      EXTERNAL_API_URL: http://toxiproxy:9090
     ports:
       - "5000:5000"
     networks:
       - internal-net
     depends_on:
       - toxiproxy
+    environment:
+      - EXTERNAL_PROVIDER_URL=${PROVIDER_URL}    
+      - FEIGN_CONNECT_TIMEOUT=${CONNECT_TIMEOUT_MS}
+      - FEIGN_READ_TIMEOUT=${READ_TIMEOUT_MS}
+      - SPRING_PROFILES_ACTIVE=docker   
 
   #====================================================
   # MONITOREO
@@ -34,6 +39,8 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - internal-net
 
   grafana:
     image: grafana/grafana
@@ -42,8 +49,13 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+    networks:
+      - internal-net
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
 
-
+      
   #====================================================
   # PUENTE HACIA EL EXTERIOR
   #====================================================
@@ -57,10 +69,11 @@ services:
     networks:
       - internal-net
       - external-net
-    # volumes:
-    #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
-    # command:
-    #   - "-config=/etc/toxiproxy/config.json"
+  # volumes:
+  #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
+  # command:
+  #   - "-config=/etc/toxiproxy/config.json"
+  
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
   #====================================================
@@ -86,3 +99,6 @@ networks:
     driver: bridge
   external-net:
     driver: bridge
+
+volumes:
+  grafana-data:
