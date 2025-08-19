@@ -4,25 +4,28 @@ services:
   #====================================================
   payment-management-service:
     build: ./payment-management-service
-    environment:
-      EXTERNAL_API_URL: http://electric-bill-service:5000
     ports:
       - "9050:9050"
     networks:
       - internal-net
     depends_on:
       - electric-bill-service
+    environment:
+      - MICROSERVICE_ELECTRIC_BILL_URL=${ELECTRIC_BILL_URL}      
 
   electric-bill-service:
     build: ./electric-bill-service
-    environment:
-      EXTERNAL_API_URL: http://toxiproxy:9090
     ports:
       - "5000:5000"
     networks:
       - internal-net
     depends_on:
       - toxiproxy
+    environment:
+      - FEIGN_CONNECT_TIMEOUT=${CONNECT_TIMEOUT_MS}
+      - FEIGN_READ_TIMEOUT=${READ_TIMEOUT_MS}
+      - EXTERNAL_PROVIDER_URL=${PROVIDER_URL}
+      - SPRING_PROFILES_ACTIVE=docker   
 
   #====================================================
   # MONITOREO
@@ -64,10 +67,10 @@ services:
     networks:
       - internal-net
       - external-net
-    # volumes:
-    #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
-    # command:
-    #   - "-config=/etc/toxiproxy/config.json"
+  # volumes:
+  #   - ./toxyproxy/toxiproxy-config.json:/etc/toxiproxy/config.json
+  # command:
+  #   - "-config=/etc/toxiproxy/config.json"
   
   #====================================================
   # ARQUITECTURA EXTERNA (OTRA EMPRESA)
