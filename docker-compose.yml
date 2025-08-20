@@ -3,7 +3,7 @@ services:
   # ARQUITECTURA INTERNA (MI EMPRESA)
   #====================================================
   payment-management-service:
-    build: ./payment-management-service
+    build: ./internal-architecture/payment-management-service
     ports:
       - "9050:9050"
     networks:
@@ -16,7 +16,7 @@ services:
       - FEIGN_READ_TIMEOUT=${READ_TIMEOUT_MS02}      
 
   electric-bill-service:
-    build: ./electric-bill-service
+    build: ./internal-architecture/electric-bill-service
     ports:
       - "5000:5000"
     networks:
