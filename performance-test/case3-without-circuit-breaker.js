@@ -1,5 +1,6 @@
 import http from "k6/http";
-import { check, sleep } from "k6";
+import { check } from "k6";
+import { buildHeaders, buildPayload } from "./common-request.js";
 
 export const options = {
   stages: [
@@ -21,23 +22,8 @@ export const options = {
 
 export default function () {
   const url = 'http://localhost:9050/api/payment/getBill';
-
-  // Generación de datos dinámicos
-  const uniqueClientId = `CLI${__VU}`; // Genera un ID de cliente único por cada usuario virtual. Ej: CLI1, CLI2, etc.
-  const uniqueReferenceNumber = `${__VU}${__ITER}${Date.now()}`; // Genera un número de referencia único para cada petición. Ej: REF-1-0-1678886400000
-
-  const headers = {
-    'x-cm-client-request-id': '123',
-    'x-cm-client-user-agent': '123',
-    'Content-Type': 'application/json'
-  };
-  const body = {
-    "idClient": uniqueClientId,
-    "idService": "ELECTRICIDAD01",
-    "referenceNumber": uniqueReferenceNumber
-  };
-
-  const payload = JSON.stringify(body);
+  const payload = buildPayload(__VU, __ITER);
+  const headers = buildHeaders();
   const res = http.post(url, payload, { headers });
 
   console.log("petición");
