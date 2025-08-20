@@ -62,7 +62,7 @@ services:
 
   toxiproxy:
     image: ghcr.io/shopify/toxiproxy:latest
-    container_name: toxiproxy-api
+    container_name: toxiproxy-server
     ports:
       - "8474:8474" # API para controlar Toxiproxy
       - "6000:6000"
@@ -80,7 +80,7 @@ services:
 
   wiremock:
     image: wiremock/wiremock:latest
-    container_name: wiremock-external-api
+    container_name: electric-bill-api
     volumes:
       - ./external-architecture/external-api/mappings:/home/wiremock/mappings
       - ./external-architecture/external-api/__files:/home/wiremock/__files  
