@@ -82,8 +82,8 @@ services:
     image: wiremock/wiremock:latest
     container_name: wiremock-external-api
     volumes:
-      - ./external-api/mappings:/home/wiremock/mappings
-      - ./external-api/__files:/home/wiremock/__files  
+      - ./external-architecture/external-api/mappings:/home/wiremock/mappings
+      - ./external-architecture/external-api/__files:/home/wiremock/__files  
     # ports:
     #   - "8080:8080"
     expose:
