@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: bill-management-service
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
+            readTimeout: ${FEIGN_READ_TIMEOUT:3000}
+
+internal-services:
+  electric-bill-service:
+    url: ${MICROSERVICE_ELECTRIC_BILL_URL:http://electric-bill-service:5000}
+
+#monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        http.client.requests: true
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:local}
+  prometheus:
+    metrics:
+      export:
+        enabled: true

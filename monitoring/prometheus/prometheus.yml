@@ -7,7 +7,7 @@ scrape_configs:
     static_configs:
       - targets: ['electric-bill-service:5000']
 
-  - job_name: 'payment-management-service'
+  - job_name: 'bill-management-service'
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['payment-management-service:9050']
+      - targets: ['bill-management-service:9050']

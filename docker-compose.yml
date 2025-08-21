@@ -2,8 +2,8 @@ services:
   #====================================================
   # ARQUITECTURA INTERNA (MI EMPRESA)
   #====================================================
-  payment-management-service:
-    build: ./internal-architecture/payment-management-service
+  bill-management-service:
+    build: ./internal-architecture/bill-management-service
     ports:
       - "9050:9050"
     networks:

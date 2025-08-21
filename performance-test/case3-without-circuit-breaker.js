@@ -21,7 +21,7 @@ export const options = {
 };
 
 export default function () {
-  const url = 'http://localhost:9050/api/payment/getBill';
+  const url = 'http://localhost:9050/api/bills/query';
   const payload = buildPayload(__VU, __ITER);
   const headers = buildHeaders();
   const res = http.post(url, payload, { headers });
