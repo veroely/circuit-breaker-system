@@ -1,8 +1,8 @@
 package com.ms.bill_management_service.infraestructure.adapter.rest;
 
 import com.ms.bill_management_service.application.port.input.BillManagementService;
-import com.ms.bill_management_service.domain.ElectricBillRequest;
-import com.ms.bill_management_service.domain.ElectricBillResponse;
+import com.ms.bill_management_service.domain.BillRequest;
+import com.ms.bill_management_service.domain.BillResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +20,8 @@ public class BillManagementController {
 
     @PostMapping
     @RequestMapping("/query")
-    public ElectricBillResponse getBillElectricity(@RequestBody ElectricBillRequest request)
+    public BillResponse getBill(@RequestBody BillRequest request)
     {
-        return billManagementService.getPaymentDetail(request);
+        return billManagementService.getBillDetails(request);
     }
 }

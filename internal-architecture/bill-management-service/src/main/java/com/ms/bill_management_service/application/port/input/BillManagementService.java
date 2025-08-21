@@ -1,8 +1,8 @@
 package com.ms.bill_management_service.application.port.input;
 
-import com.ms.bill_management_service.domain.ElectricBillRequest;
-import com.ms.bill_management_service.domain.ElectricBillResponse;
+import com.ms.bill_management_service.domain.BillRequest;
+import com.ms.bill_management_service.domain.BillResponse;
 
 public interface BillManagementService {
-    ElectricBillResponse getPaymentDetail(ElectricBillRequest electricBillRequest);
+    BillResponse getBillDetails(BillRequest billRequest);
 }

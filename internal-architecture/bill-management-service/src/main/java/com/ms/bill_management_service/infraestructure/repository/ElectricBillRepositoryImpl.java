@@ -1,7 +1,7 @@
 package com.ms.bill_management_service.infraestructure.repository;
 
 import com.ms.bill_management_service.application.port.output.ElectricBillRepository;
-import com.ms.bill_management_service.domain.ElectricBillResponse;
+import com.ms.bill_management_service.domain.BillResponse;
 import com.ms.bill_management_service.infraestructure.adapter.feign.ElectricBillClient;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class ElectricBillRepositoryImpl implements ElectricBillRepository {
     }
 
     @Override
-    public ElectricBillResponse getBill(String providerId, String referenceNumber) {
+    public BillResponse getBillDetails(String providerId, String referenceNumber) {
         return electricBillClient.getBill(providerId,referenceNumber);
     }
 }
