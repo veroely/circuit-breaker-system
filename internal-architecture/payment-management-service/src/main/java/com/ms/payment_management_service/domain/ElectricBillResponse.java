@@ -1,4 +1,4 @@
-package com.ms.payment_management_service;
+package com.ms.payment_management_service.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

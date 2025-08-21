@@ -1,5 +1,6 @@
-package com.ms.payment_management_service;
+package com.ms.payment_management_service.infraestructure.adapter.feign;
 
+import com.ms.payment_management_service.domain.ElectricBillResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
