@@ -1,3 +1,6 @@
+server:
+  port: 9050
+
 spring:
   application:
     name: bill-management-service
@@ -11,7 +14,7 @@ spring:
 
 internal-services:
   electric-bill-service:
-    url: ${MICROSERVICE_ELECTRIC_BILL_URL:http://electric-bill-service:5000}
+    url: ${MICROSERVICE_ELECTRIC_BILL_URL:http://localhost:5000}
 
 #monitoring
 management:
