@@ -17,7 +17,7 @@ public class ElectricBillService implements ElectricBillServicePort {
     }
 
     @Override
-    public ElectricBill getBill(String providerId, String referenceNumber) {
+    public ElectricBill getBillDetails(String providerId, String referenceNumber) {
         try {
             return electricBillRepository.findByReference(referenceNumber);
         } catch (BillNotFoundException | ElectricBillServiceException e) {

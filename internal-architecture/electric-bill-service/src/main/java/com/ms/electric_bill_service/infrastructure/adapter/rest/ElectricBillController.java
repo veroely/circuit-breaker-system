@@ -21,7 +21,7 @@ public class ElectricBillController {
     public ElectricBillResponse getBill(
             @PathVariable String providerId,
             @PathVariable String referenceNumber) {
-        ElectricBill bill = electricBillService.getBill(providerId, referenceNumber);
+        ElectricBill bill = electricBillService.getBillDetails(providerId, referenceNumber);
         return mapper.toElectricBillResponse(bill);
     }
 }

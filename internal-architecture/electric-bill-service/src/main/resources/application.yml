@@ -44,3 +44,12 @@ logging:
     feign.client: DEBUG
     org.springframework.cloud.openfeign: DEBUG
 
+#circuit-breaker
+resilience4j:
+  enabled: false
+  circuit-breaker:
+    instances:
+      getBillDetails:
+        register-health-indicator: true
+        sliding-window-size: 5
+
