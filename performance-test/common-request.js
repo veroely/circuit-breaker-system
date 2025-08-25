@@ -10,6 +10,7 @@ export function buildPayload(vu, iter) {
     return JSON.stringify(
         {
             "idClient": `CLI${vu}`,
+            "serviceType": "LUZ",
             "idService": "ELECTRICIDAD01",
             "referenceNumber": `${vu}${iter}${Date.now()}`
         }
