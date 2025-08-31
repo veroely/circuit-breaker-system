@@ -9,12 +9,12 @@ spring:
       client:
         config:
           default:
-            connectTimeout: ${FEIGN_CONNECT_TIMEOUT:21000}
-            readTimeout: ${FEIGN_READ_TIMEOUT:21000}
+            connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
+            readTimeout: ${FEIGN_READ_TIMEOUT:3000}
 
 external-services:
   electricity-provider:
-    url: ${EXTERNAL_PROVIDER_URL:http://toxiproxy:6000}
+    url: ${EXTERNAL_PROVIDER_URL:http://localhost:6000}
 
 #monitoring
 management:
@@ -33,9 +33,8 @@ management:
     tags:
       application: ${spring.application.name}
       environment: ${spring.profiles.active:local}
-  prometheus:
-    metrics:
-      export:
+    export:
+      prometheus:
         enabled: true
 
 logging:

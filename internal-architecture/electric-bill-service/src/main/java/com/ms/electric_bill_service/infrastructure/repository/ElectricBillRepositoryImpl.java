@@ -24,9 +24,6 @@ public class ElectricBillRepositoryImpl implements ElectricBillRepository {
     public ElectricBill findByReference(String reference) {
         try {
             ElectricBillResponse billResponse = electricityProviderClient.getBill(reference);
-            if (billResponse == null) {
-                throw new BillNotFoundException("Bill not found for reference: " + reference);
-            }
             return mapper.toElectricBill(billResponse);
         } catch (FeignException.NotFound e) {
             throw new BillNotFoundException("Bill not found for reference: " + reference, e);
