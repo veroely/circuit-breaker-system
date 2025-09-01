@@ -30,6 +30,7 @@ management:
       percentiles-histogram:
         http.server.requests: true
         http.client.requests: true
+        feign.client.requests: true
     tags:
       application: ${spring.application.name}
       environment: ${spring.profiles.active:local}
@@ -37,3 +38,8 @@ management:
     metrics:
       export:
         enabled: true
+
+# activa métricas Feign para Prometheus/Micrometer
+feign:
+  metrics:
+    enabled: true
