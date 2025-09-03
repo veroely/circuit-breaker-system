@@ -34,9 +34,8 @@ management:
     tags:
       application: ${spring.application.name}
       environment: ${spring.profiles.active:local}
-  prometheus:
-    metrics:
-      export:
+    export:
+      prometheus:
         enabled: true
 
 # activa métricas Feign para Prometheus/Micrometer
