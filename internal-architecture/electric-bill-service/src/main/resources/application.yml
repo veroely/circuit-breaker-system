@@ -1,0 +1,72 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: electric-bill-service
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
+            readTimeout: ${FEIGN_READ_TIMEOUT:3000}
+
+external-services:
+  electricity-provider:
+    url: ${EXTERNAL_PROVIDER_URL:http://localhost:6000}
+
+#monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        http.client.requests: true
+        feign.client.requests: true
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:local}
+    export:
+      prometheus:
+        enabled: true
+
+# activa métricas Feign para Prometheus/Micrometer
+feign:
+  metrics:
+    enabled: true
+
+logging:
+  level:
+    feign: DEBUG
+    feign.client: DEBUG
+    org.springframework.cloud.openfeign: DEBUG
+
+#circuit-breaker
+resilience4j:
+  enabled: false # TODO: Establecer en true en entornos donde se desee activar Resilience4j
+  circuit-breaker:
+    instances:
+      getBillDetails:
+        register-health-indicator: true # Expone métricas del Circuit Breaker a través del Actuator de Spring Boot
+        # Estado cerrado (Closed)
+        sliding-window-type: count_based # Define el tipo de ventana para monitoreo: 'count_based' o 'time_based'
+        sliding-window-size: 10 # Número de últimas llamadas evaluadas cuando el Circuit Breaker está cerrado
+        minimum-number-of-calls: 5 # Número mínimo de llamadas necesarias antes de evaluar el porcentaje de fallas
+
+        failure-rate-threshold: 50 # Porcentaje de fallas (50%) para abrir el Circuit Breaker
+        slow-call-rate-threshold: 100 # Porcentaje de llamadas lentas que deben alcanzarse para considerarlo una falla
+        slow-call-duration-threshold: 60000 # Duración en milisegundos (60s) para considerar una llamada como lenta
+        # Estado abierto (Open)
+        wait-duration-in-open-state: 6000 # Tiempo (en milisegundos) que el CB permanece abierto antes de pasar a estado medio-abierto
+        # Estado medio-abierto (Half-Open)
+        permitted-number-of-calls-in-half-open-state: 5 # Número de llamadas permitidas para probar si el servicio se ha recuperado
+        automatic-transition-from-open-to-half-open-enabled: true # Habilita la transición automática del estado abierto al medio-abierto
+

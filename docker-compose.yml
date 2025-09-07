@@ -2,8 +2,8 @@ services:
   #====================================================
   # ARQUITECTURA INTERNA (MI EMPRESA)
   #====================================================
-  payment-management-service:
-    build: ./payment-management-service
+  bill-management-service:
+    build: ./internal-architecture/bill-management-service
     ports:
       - "9050:9050"
     networks:
@@ -16,7 +16,7 @@ services:
       - FEIGN_READ_TIMEOUT=${READ_TIMEOUT_MS02}      
 
   electric-bill-service:
-    build: ./electric-bill-service
+    build: ./internal-architecture/electric-bill-service
     ports:
       - "5000:5000"
     networks:
@@ -38,7 +38,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - internal-net
 
@@ -53,7 +53,7 @@ services:
       - internal-net
     volumes:
       - grafana-data:/var/lib/grafana
-      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./monitoring/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
 
       
   #====================================================
@@ -62,7 +62,7 @@ services:
 
   toxiproxy:
     image: ghcr.io/shopify/toxiproxy:latest
-    container_name: toxiproxy-api
+    container_name: toxiproxy-server
     ports:
       - "8474:8474" # API para controlar Toxiproxy
       - "6000:6000"
@@ -80,10 +80,10 @@ services:
 
   wiremock:
     image: wiremock/wiremock:latest
-    container_name: wiremock-external-api
+    container_name: electric-bill-api
     volumes:
-      - ./external-api/mappings:/home/wiremock/mappings
-      - ./external-api/__files:/home/wiremock/__files  
+      - ./external-architecture/external-api/mappings:/home/wiremock/mappings
+      - ./external-architecture/external-api/__files:/home/wiremock/__files  
     # ports:
     #   - "8080:8080"
     expose:
