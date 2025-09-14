@@ -10,7 +10,6 @@ import com.ms.account_service.repository.AccountRepository;
 import com.ms.account_service.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -22,7 +21,6 @@ public class AccountServiceImpl implements AccountService {
     private final AccountMapper accountMapper;
 
     @Override
-    @Transactional
     public AccountResponse createAccount(AccountRequest accountRequest) {
         if (accountRepository.existsByAccountNumber(accountRequest.getAccountNumber())) {
             throw new IllegalArgumentException("Account with number " + accountRequest.getAccountNumber() + " already exists");
@@ -35,7 +33,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public AccountResponse getAccountById(Long id) {
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + id));
@@ -43,7 +40,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public AccountResponse getAccountByNumber(String accountNumber) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with number: " + accountNumber));
@@ -51,7 +47,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean verifySufficientFunds(String accountNumber, BigDecimal amount) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with number: " + accountNumber));
@@ -59,7 +54,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void withdraw(String accountNumber, BigDecimal amount) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with number: " + accountNumber));
@@ -73,7 +67,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void deposit(String accountNumber, BigDecimal amount) {
         Account account = accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with number: " + accountNumber));
@@ -83,7 +76,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void deleteAccount(Long id) {
         if (!accountRepository.existsById(id)) {
             throw new AccountNotFoundException("Account not found with id: " + id);
