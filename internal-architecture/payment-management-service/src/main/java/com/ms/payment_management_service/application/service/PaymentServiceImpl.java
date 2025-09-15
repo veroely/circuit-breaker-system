@@ -1,17 +1,16 @@
 package com.ms.payment_management_service.application.service;
 
 import com.ms.payment_management_service.application.port.input.PaymentService;
-import com.ms.payment_management_service.application.port.output.AccountServiceClient;
-import com.ms.payment_management_service.application.port.output.TransactionServiceClient;
+import com.ms.payment_management_service.infrastructure.adapter.input.feign.AccountServiceClient;
+import com.ms.payment_management_service.infrastructure.adapter.input.feign.TransactionServiceClient;
 import com.ms.payment_management_service.domain.*;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -27,41 +26,61 @@ public class PaymentServiceImpl implements PaymentService {
     private static final String PAYMENT_SUCCESS = "Payment processed successfully";
 
     @Override
-    public ElectricBillResponse getPaymentDetail(ElectricBillRequest electricBillRequest) {
-        return new ElectricBillResponse("", BigDecimal.ZERO, LocalDate.now(), "", "");
-    }
-
-    @Override
     public PaymentResponse processPayment(PaymentRequest paymentRequest) {
         log.info("Processing payment for user: {}, bill: {}", paymentRequest.getUserId(), paymentRequest.getBillId());
         
-        // 1. Verify account balance
-        AccountBalanceResponse accountBalance = accountServiceClient.getAccountBalance(paymentRequest.getUserId());
-        
-        if (accountBalance.getBalance().compareTo(paymentRequest.getAmount()) < 0) {
-            log.warn("Insufficient funds for user: {}. Required: {}, Available: {}", 
-                    paymentRequest.getUserId(), paymentRequest.getAmount(), accountBalance.getBalance());
-            return buildFailedPaymentResponse(paymentRequest, INSUFFICIENT_FUNDS);
-        }
-        
         try {
-            // 2. Create transaction record
-            TransactionRequest transactionRequest = TransactionRequest.builder()
-                    .userId(paymentRequest.getUserId())
-                    .billId(paymentRequest.getBillId())
-                    .amount(paymentRequest.getAmount().negate()) // Negative amount for debit
-                    .type("DEBIT")
-                    .description(PAYMENT_DESCRIPTION)
-                    .referenceId(UUID.randomUUID().toString())
-                    .build();
+            // 1. Verify account balance
+            AccountBalanceResponse accountBalance;
+            try {
+                accountBalance = accountServiceClient.getAccountBalance(paymentRequest.getUserId());
+                
+                if (accountBalance.getBalance().compareTo(paymentRequest.getAmount()) < 0) {
+                    log.warn("Insufficient funds for user: {}. Required: {}, Available: {}", 
+                            paymentRequest.getUserId(), paymentRequest.getAmount(), accountBalance.getBalance());
+                    return buildFailedPaymentResponse(paymentRequest, INSUFFICIENT_FUNDS);
+                }
+            } catch (FeignException.NotFound e) {
+                log.error("Account not found for user: {}", paymentRequest.getUserId());
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Account not found for user: " + paymentRequest.getUserId()
+                );
+            } catch (FeignException e) {
+                log.error("Error accessing account service: {}", e.contentUTF8(), e);
+                throw new ResponseStatusException(
+                        HttpStatus.SERVICE_UNAVAILABLE,
+                        "Error accessing account service: " + e.getMessage()
+                );
+            }
             
-            TransactionResponse transaction = transactionServiceClient.createTransaction(transactionRequest);
-            
-            // 3. Update account balance
-            accountServiceClient.updateAccountBalance(
-                    paymentRequest.getUserId(), 
-                    paymentRequest.getAmount().negate().doubleValue()
-            );
+            TransactionResponse transaction;
+            try {
+                // 2. Create transaction record
+                TransactionRequest transactionRequest = TransactionRequest.builder()
+                        .userId(paymentRequest.getUserId())
+                        .billId(paymentRequest.getBillId())
+                        .amount(paymentRequest.getAmount().negate()) // Negative amount for debit
+                        .type("DEBIT")
+                        .description(PAYMENT_DESCRIPTION)
+                        .referenceId(UUID.randomUUID().toString())
+                        .build();
+                
+                transaction = transactionServiceClient.createTransaction(transactionRequest);
+                
+                // 3. Update account balance
+                accountServiceClient.updateAccountBalance(
+                        paymentRequest.getUserId(), 
+                        paymentRequest.getAmount().negate().doubleValue()
+                );
+                
+            } catch (FeignException e) {
+                log.error("Error processing transaction: {}", e.contentUTF8(), e);
+                throw new ResponseStatusException(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Error processing transaction: " + e.getMessage()
+                );
+            }
             
             log.info("Payment processed successfully. Transaction ID: {}", transaction.getTransactionId());
             
@@ -76,12 +95,14 @@ public class PaymentServiceImpl implements PaymentService {
                     .message(PAYMENT_SUCCESS)
                     .build();
                     
+        } catch (ResponseStatusException e) {
+            throw e; // Re-throw already handled exceptions
         } catch (Exception e) {
-            log.error("Error processing payment for user: {}, bill: {}", 
+            log.error("Unexpected error processing payment for user: {}, bill: {}", 
                     paymentRequest.getUserId(), paymentRequest.getBillId(), e);
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, 
-                    "Error processing payment: " + e.getMessage()
+                    "Unexpected error processing payment: " + e.getMessage()
             );
         }
     }

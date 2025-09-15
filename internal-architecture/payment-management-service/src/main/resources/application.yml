@@ -12,6 +12,15 @@ spring:
             connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
             readTimeout: ${FEIGN_READ_TIMEOUT:3000}
 
+# Service URLs
+account:
+  service:
+    url: ${ACCOUNT_SERVICE_URL:http://account-service:8080}
+
+transaction:
+  service:
+    url: ${TRANSACTION_SERVICE_URL:http://transaction-service:8080}
+
 internal-services:
   electric-bill-service:
     url: ${MICROSERVICE_ELECTRIC_BILL_URL:http://electric-bill-service:5000}
