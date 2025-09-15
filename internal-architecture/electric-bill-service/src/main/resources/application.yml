@@ -15,6 +15,8 @@ spring:
 external-services:
   electricity-provider:
     url: ${EXTERNAL_PROVIDER_URL:http://localhost:6000}
+  payment-service:
+    url: ${PAYMENT_SERVICE_URL:http://localhost:8081}
 
 #monitoring
 management:

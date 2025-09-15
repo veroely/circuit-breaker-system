@@ -33,4 +33,9 @@ public class ElectricBillRepositoryImpl implements ElectricBillRepository {
             throw new ElectricBillServiceException("Unexpected error while fetching bill", e);
         }
     }
+
+    @Override
+    public ElectricBill save(ElectricBill electricBill) {
+        return null;
+    }
 }
