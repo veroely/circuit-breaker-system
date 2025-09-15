@@ -7,15 +7,12 @@ import com.ms.transaction_service.exception.TransactionException;
 import com.ms.transaction_service.mapper.TransactionMapper;
 import com.ms.transaction_service.model.Transaction;
 import com.ms.transaction_service.model.Transaction.TransactionStatus;
-import com.ms.transaction_service.model.Transaction.TransactionType;
 import com.ms.transaction_service.repository.TransactionRepository;
 import com.ms.transaction_service.service.TransactionService;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +26,6 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountClient accountClient;
 
     @Override
-    @Transactional
     public TransactionResponse createTransaction(TransactionRequest transactionRequest) throws TransactionException {
         try {
             Transaction transaction = transactionMapper.toEntity(transactionRequest);
@@ -44,7 +40,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional
     public void processTransaction(TransactionRequest transactionRequest) throws TransactionException {
         Transaction transaction = transactionMapper.toEntity(transactionRequest);
         transaction.setStatus(TransactionStatus.PENDING);
@@ -133,7 +128,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public TransactionResponse getTransactionById(Long id) throws TransactionException {
         return transactionRepository.findById(id)
                 .map(transactionMapper::toResponse)
@@ -141,7 +135,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<TransactionResponse> getTransactionsByAccountNumber(String accountNumber) {
         return transactionRepository
                 .findBySourceAccountNumberOrDestinationAccountNumberOrderByTransactionDateDesc(accountNumber, accountNumber)
@@ -151,7 +144,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional
     public void cancelTransaction(Long transactionId) throws TransactionException {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new TransactionException("Transaction not found with id: " + transactionId));
