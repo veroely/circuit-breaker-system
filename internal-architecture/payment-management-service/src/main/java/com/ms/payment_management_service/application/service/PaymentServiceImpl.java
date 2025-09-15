@@ -3,6 +3,7 @@ package com.ms.payment_management_service.application.service;
 import com.ms.payment_management_service.application.port.input.PaymentService;
 import com.ms.payment_management_service.infrastructure.adapter.input.feign.AccountServiceClient;
 import com.ms.payment_management_service.domain.*;
+import com.ms.payment_management_service.infrastructure.adapter.input.feign.TransactionServiceClient;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
