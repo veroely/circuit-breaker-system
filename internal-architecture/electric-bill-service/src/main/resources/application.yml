@@ -65,7 +65,7 @@ resilience4j:
 
         failure-rate-threshold: ${CB_FAILURE_RATE_THRESHOLD :50} # Porcentaje de fallas (50%) para abrir el Circuit Breaker
         slow-call-rate-threshold: ${CB_SLOW_CALL_RATE_THRESHOLD:100} # Porcentaje de llamadas lentas que deben alcanzarse para considerarlo una falla
-        slow-call-duration-threshold: ${CB_SLOW_CALL_DURATION_THRESHOLD:60000} # Duración en milisegundos (60s) para considerar una llamada como lenta
+        slow-call-duration-threshold: ${CB_SLOW_CALL_DURATION_THRESHOLD:6000} # Duración en milisegundos (60s) para considerar una llamada como lenta
         # Estado abierto (Open)
         wait-duration-in-open-state: ${CB_WAIT_DURATION_IN_OPEN_STATE:6000} # Tiempo (en milisegundos) que el CB permanece abierto antes de pasar a estado medio-abierto
         # Estado medio-abierto (Half-Open)
