@@ -33,7 +33,7 @@ public class ElectricBillService implements ElectricBillServicePort {
         return electricBillRepository.findByReference(referenceNumber);
     }
 
-    public ElectricBill alternativeOption(String providerId, String referenceNumber) {
+    public ElectricBill alternativeOption(String providerId, String referenceNumber, Throwable throwable) {
         return new ElectricBill(
                 referenceNumber,
                 BigDecimal.ZERO,
