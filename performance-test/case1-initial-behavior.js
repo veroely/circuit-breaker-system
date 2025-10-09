@@ -3,12 +3,14 @@ import { check } from "k6";
 import { buildHeaders, buildPayload } from "./common-request.js";
 
 export const options = {
-   stages: [
-    { duration: '2m', target: 100 },// Fase 1: Incremento gradual
-    { duration: '5m', target: 500 }, // Fase 2: Carga media sostenida
-    { duration: '2m', target: 1000 },// Fase 3: Pico de carga
-    { duration: '1m', target: 0 }//Fase 4: Descenso
-  ] 
+    stages: [
+    { duration: '2m', target: 50 },   // Fase 1: Normal
+    { duration: '3m', target: 100 },  // Fase 2: Presión moderada
+    { duration: '5m', target: 200 },  // Fase 3: Fallos por timeout
+    { duration: '2m', target: 300 },  // Fase 4: Descenso
+    { duration: '3m', target: 200 },  // Fase 5: Recuperación
+    { duration: '2m', target: 0 }     // Fase 6: Normalización
+  ]
 };
 
 export default function () {
