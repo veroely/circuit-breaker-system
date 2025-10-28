@@ -15,6 +15,8 @@ spring:
 external-services:
   electricity-provider:
     url: ${EXTERNAL_PROVIDER_URL:http://localhost:6000}
+  payment-service:
+    url: ${PAYMENT_SERVICE_URL:http://localhost:8081}
 
 #monitoring
 management:
@@ -51,22 +53,22 @@ logging:
 
 #circuit-breaker
 resilience4j:
-  enabled: false # TODO: Establecer en true en entornos donde se desee activar Resilience4j
+  enabled: ${R4J_ENABLED:true} # TODO: Establecer en true en entornos donde se desee activar Resilience4j
   circuit-breaker:
     instances:
       getBillDetails:
-        register-health-indicator: true # Expone métricas del Circuit Breaker a través del Actuator de Spring Boot
+        register-health-indicator: ${CB_REGISTER_HEALTH_INDICATOR:true} # Expone métricas del Circuit Breaker a través del Actuator de Spring Boot
         # Estado cerrado (Closed)
-        sliding-window-type: count_based # Define el tipo de ventana para monitoreo: 'count_based' o 'time_based'
-        sliding-window-size: 10 # Número de últimas llamadas evaluadas cuando el Circuit Breaker está cerrado
-        minimum-number-of-calls: 5 # Número mínimo de llamadas necesarias antes de evaluar el porcentaje de fallas
+        sliding-window-type: ${CB_SLIDING_WINDOW_TYPE:count_based} # Define el tipo de ventana para monitoreo: 'count_based' o 'time_based'
+        sliding-window-size: ${CB_SLIDING_WINDOW_SIZE:10} # Número de últimas llamadas evaluadas cuando el Circuit Breaker está cerrado
+        minimum-number-of-calls: ${CB_MINIMUM_NUMBER_OF_CALLS:5} # Número mínimo de llamadas necesarias antes de evaluar el porcentaje de fallas
 
-        failure-rate-threshold: 50 # Porcentaje de fallas (50%) para abrir el Circuit Breaker
-        slow-call-rate-threshold: 100 # Porcentaje de llamadas lentas que deben alcanzarse para considerarlo una falla
-        slow-call-duration-threshold: 60000 # Duración en milisegundos (60s) para considerar una llamada como lenta
+        failure-rate-threshold: ${CB_FAILURE_RATE_THRESHOLD :50} # Porcentaje de fallas (50%) para abrir el Circuit Breaker
+        slow-call-rate-threshold: ${CB_SLOW_CALL_RATE_THRESHOLD:100} # Porcentaje de llamadas lentas que deben alcanzarse para considerarlo una falla
+        slow-call-duration-threshold: ${CB_SLOW_CALL_DURATION_THRESHOLD:6000} # Duración en milisegundos (60s) para considerar una llamada como lenta
         # Estado abierto (Open)
-        wait-duration-in-open-state: 6000 # Tiempo (en milisegundos) que el CB permanece abierto antes de pasar a estado medio-abierto
+        wait-duration-in-open-state: ${CB_WAIT_DURATION_IN_OPEN_STATE:6000} # Tiempo (en milisegundos) que el CB permanece abierto antes de pasar a estado medio-abierto
         # Estado medio-abierto (Half-Open)
-        permitted-number-of-calls-in-half-open-state: 5 # Número de llamadas permitidas para probar si el servicio se ha recuperado
-        automatic-transition-from-open-to-half-open-enabled: true # Habilita la transición automática del estado abierto al medio-abierto
+        permitted-number-of-calls-in-half-open-state: ${CB_PERMITTED_NUMBER_OF_CALLS_IN_HALF_OPEN_STATE:5} # Número de llamadas permitidas para probar si el servicio se ha recuperado
+        automatic-transition-from-open-to-half-open-enabled: ${CB_AUTOMATIC_TRANSITION_FROM_OPEN_TO_HALF_OPEN_ENABLED:true} # Habilita la transición automática del estado abierto al medio-abierto
 

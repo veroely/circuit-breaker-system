@@ -1,5 +1,5 @@
 server:
-  port: 9050
+  port: 9060
 
 spring:
   application:
@@ -11,6 +11,15 @@ spring:
           default:
             connectTimeout: ${FEIGN_CONNECT_TIMEOUT:3000}
             readTimeout: ${FEIGN_READ_TIMEOUT:3000}
+
+# Service URLs
+account:
+  service:
+    url: ${ACCOUNT_SERVICE_URL:http://account-service:8080}
+
+transaction:
+  service:
+    url: ${TRANSACTION_SERVICE_URL:http://transaction-service:8080}
 
 internal-services:
   electric-bill-service:
