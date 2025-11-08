@@ -1,6 +1,6 @@
-package com.ms.electric_bill_service.infrastructure.repository;
+package com.ms.electric_bill_service.infrastructure.adapter.out;
 
-import com.ms.electric_bill_service.application.port.ouput.ElectricBillRepository;
+import com.ms.electric_bill_service.application.port.ouput.ElectricBillClientPort;
 import com.ms.electric_bill_service.domain.ElectricBill;
 import com.ms.electric_bill_service.domain.exception.BillNotFoundException;
 import com.ms.electric_bill_service.domain.exception.ElectricBillServiceException;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 import feign.FeignException;
 
 @Repository
-public class ElectricBillRepositoryImpl implements ElectricBillRepository {
+public class ElectricBillRepositorAdapter implements ElectricBillClientPort {
     private final ElectricityProviderClient electricityProviderClient;
     private final ElectricMapper mapper;
 
-    public ElectricBillRepositoryImpl(ElectricityProviderClient electricityProviderClient, ElectricMapper mapper) {
+    public ElectricBillRepositorAdapter(ElectricityProviderClient electricityProviderClient, ElectricMapper mapper) {
         this.electricityProviderClient = electricityProviderClient;
         this.mapper = mapper;
     }

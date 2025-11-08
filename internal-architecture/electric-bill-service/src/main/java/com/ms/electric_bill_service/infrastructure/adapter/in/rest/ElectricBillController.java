@@ -1,4 +1,4 @@
-package com.ms.electric_bill_service.infrastructure.adapter.rest;
+package com.ms.electric_bill_service.infrastructure.adapter.in.rest;
 
 import com.ms.electric_bill_service.application.port.input.ElectricBillServicePort;
 import com.ms.electric_bill_service.domain.ElectricBill;

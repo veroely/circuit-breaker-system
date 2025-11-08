@@ -1,4 +1,4 @@
-package com.ms.electric_bill_service.infrastructure.exceptions;
+package com.ms.electric_bill_service.infrastructure.exeption;
 
 public class PaymentProcessingException extends RuntimeException {
     public PaymentProcessingException(String message) {
