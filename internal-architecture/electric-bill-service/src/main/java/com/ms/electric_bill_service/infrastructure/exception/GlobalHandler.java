@@ -1,8 +1,7 @@
-package com.ms.electric_bill_service.infrastructure.exeption;
+package com.ms.electric_bill_service.infrastructure.exception;
 
 import com.ms.electric_bill_service.domain.error.ErrorResponse;
 import com.ms.electric_bill_service.domain.exception.BillNotFoundException;
-import com.ms.electric_bill_service.domain.exception.ElectricBillServiceException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

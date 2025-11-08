@@ -1,7 +1,7 @@
 package com.ms.electric_bill_service.application.service;
 
 import com.ms.electric_bill_service.application.port.input.ElectricBillServicePort;
-import com.ms.electric_bill_service.application.port.ouput.ElectricBillClientPort;
+import com.ms.electric_bill_service.application.port.output.ElectricBillClientPort;
 import com.ms.electric_bill_service.domain.ElectricBill;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
