@@ -1,4 +1,4 @@
-package com.ms.electric_bill_service.domain.exception;
+package com.ms.electric_bill_service.infrastructure.exception;
 
 public class ElectricBillServiceException extends RuntimeException {
     public ElectricBillServiceException(String message) {

@@ -1,12 +1,9 @@
-package com.ms.electric_bill_service.infrastructure.adapter.rest;
+package com.ms.electric_bill_service.infrastructure.adapter.in.rest;
 
 import com.ms.electric_bill_service.application.port.input.ElectricBillServicePort;
 import com.ms.electric_bill_service.domain.ElectricBill;
-import com.ms.electric_bill_service.dto.PaymentRequest;
-import com.ms.electric_bill_service.dto.PaymentResponse;
 import com.ms.electric_bill_service.infrastructure.adapter.mapper.ElectricMapper;
 import com.ms.electric_bill_service.dto.ElectricBillResponse;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,17 +23,5 @@ public class ElectricBillController {
             @PathVariable String referenceNumber) {
         ElectricBill bill = electricBillService.getBillDetails(providerId, referenceNumber);
         return mapper.toElectricBillResponse(bill);
-    }
-    
-    @PostMapping("/{providerId}/bill/{referenceNumber}/pay")
-    public PaymentResponse processPayment(
-            @PathVariable String providerId,
-            @PathVariable String referenceNumber,
-            @Valid @RequestBody PaymentRequest paymentRequest) {
-        // Set the provider ID and reference from path variables to ensure consistency
-        paymentRequest.setProviderId(providerId);
-        paymentRequest.setBillReference(referenceNumber);
-        
-        return electricBillService.processPayment(paymentRequest);
     }
 }

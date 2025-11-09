@@ -1,9 +1,9 @@
-package com.ms.electric_bill_service.infrastructure.repository;
+package com.ms.electric_bill_service.infrastructure.adapter.out;
 
-import com.ms.electric_bill_service.application.port.ouput.ElectricBillRepository;
+import com.ms.electric_bill_service.application.port.output.ElectricBillClientPort;
 import com.ms.electric_bill_service.domain.ElectricBill;
 import com.ms.electric_bill_service.domain.exception.BillNotFoundException;
-import com.ms.electric_bill_service.domain.exception.ElectricBillServiceException;
+import com.ms.electric_bill_service.infrastructure.exception.ElectricBillServiceException;
 import com.ms.electric_bill_service.infrastructure.adapter.feign.ElectricityProviderClient;
 import com.ms.electric_bill_service.infrastructure.adapter.mapper.ElectricMapper;
 import com.ms.electric_bill_service.dto.ElectricBillResponse;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 import feign.FeignException;
 
 @Repository
-public class ElectricBillRepositoryImpl implements ElectricBillRepository {
+public class ElectricBillAdapter implements ElectricBillClientPort {
     private final ElectricityProviderClient electricityProviderClient;
     private final ElectricMapper mapper;
 
-    public ElectricBillRepositoryImpl(ElectricityProviderClient electricityProviderClient, ElectricMapper mapper) {
+    public ElectricBillAdapter(ElectricityProviderClient electricityProviderClient, ElectricMapper mapper) {
         this.electricityProviderClient = electricityProviderClient;
         this.mapper = mapper;
     }
@@ -32,10 +32,5 @@ public class ElectricBillRepositoryImpl implements ElectricBillRepository {
         } catch (Exception e) {
             throw new ElectricBillServiceException("Unexpected error while fetching bill", e);
         }
-    }
-
-    @Override
-    public ElectricBill save(ElectricBill electricBill) {
-        return null;
     }
 }

@@ -6,5 +6,4 @@ import com.ms.electric_bill_service.dto.PaymentResponse;
 
 public interface ElectricBillServicePort {
     ElectricBill getBillDetails(String providerId, String referenceNumber);
-    PaymentResponse processPayment(PaymentRequest paymentRequest);
 }
