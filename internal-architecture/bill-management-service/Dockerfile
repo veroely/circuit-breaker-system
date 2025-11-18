@@ -4,7 +4,7 @@ COPY build.gradle gradlew gradle/wrapper/ /app/
 COPY src /app/src
 RUN gradle build --no-daemon
 
-FROM openjdk:21-jdk
+FROM amazoncorretto:21
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
 EXPOSE 9050
