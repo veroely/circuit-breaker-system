@@ -1,6 +1,5 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
-
 import { buildHeaders, buildPayload } from "./common-request.js";
 
 export const options = {
@@ -17,7 +16,7 @@ export default function () {
   //validaciones
   check(res, {
     'status is 200': (r) => r.status === 200,
-    'time<500ms':(r)=>r.timings.duration <500
+    'time<1500ms':(r)=>r.timings.duration <1500
   });
 
 
@@ -26,4 +25,4 @@ export default function () {
 }
 
 //comandos para ejecutar script
-//k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write C:\Users\Veronica\Desktop\POSGRADO\SegundoSemestre\TrabajoDeTitulacion\code\circuit-breaker-system\performance-test\baseline-load-test.js
+//k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write C:\Users\Veronica\Desktop\POSGRADO\SegundoSemestre\TrabajoDeTitulacion\code\circuit-breaker-system\performance-test\2.1simulate-latency-without-circuit-breaker.js
