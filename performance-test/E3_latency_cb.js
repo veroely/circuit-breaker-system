@@ -23,7 +23,7 @@ export let options = {
 
   thresholds: {
     "success_rate": ["rate>0.80"], // con latencia alta, CB abrirá → respuestas fallback
-    "http_req_duration": ["p(95)<8000"], // p95 en open state debe mejorar
+    "http_req_duration": ["p(95)<5000"], // p95 en open state debe mejorar
   },
 };
 
