@@ -36,8 +36,8 @@ export default function () {
   });
 
   //simula tiempo entre peticiones
-  sleep(0.01);
+  sleep(1);
 }
 
 //comandos para ejecutar script
-//k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write C:\Users\Veronica\Desktop\POSGRADO\SegundoSemestre\TrabajoDeTitulacion\code\circuit-breaker-system\performance-test\E4_errors_5xx_cb.js
+//k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write C:\Users\Veronica\Desktop\POSGRADO\SegundoSemestre\TrabajoDeTitulacion\code\circuit-breaker-system\performance-test\E5_circuit_breaker_change_parameters.js
