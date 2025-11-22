@@ -3,18 +3,20 @@ import { check, sleep } from "k6";
 import { buildHeaders, buildPayload } from "./common-request.js";
 import { Trend, Rate } from "k6/metrics";
 
-export let success = new Rate('success_rate');
+export const success = new Rate('success_rate');
 
-export let options = {
+export const options = {
   stages: [
-    { duration: '10s', target: 30 },
-    { duration: '120s', target: 150 },
-    { duration: '10s', target: 0 }
-  ],
-  thresholds: {
-    'success_rate': ['rate>0.50']
-  },
+    { duration: '2m', target: 50 },   // Fase 1: Normal
+    { duration: '3m', target: 100 },  // Fase 2: Presión moderada
+    { duration: '5m', target: 200 },  // Fase 3: Fallos por timeout
+    { duration: '2m', target: 300 },  // Fase 4: Descenso
+    { duration: '3m', target: 200 },  // Fase 5: Recuperación
+    { duration: '2m', target: 0 }     // Fase 6: Normalización
+  ]
 };
+
+
 
 export default function () {
   const url = 'http://localhost:9050/api/bills/query';

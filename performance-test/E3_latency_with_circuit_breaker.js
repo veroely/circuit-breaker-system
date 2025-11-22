@@ -6,15 +6,15 @@ import { Trend, Rate } from "k6/metrics";
 // ----------------------
 // MÉTRICAS PERSONALIZADAS
 // ----------------------
-export let latency = new Trend("latency_ms");
-export let success = new Rate("success_rate");
+export const latency = new Trend("latency_ms");
+export const success = new Rate("success_rate");
 
 // ----------------------
 // CONFIGURACIÓN DEL ESCENARIO
 // ----------------------
 // E3: Latencia 3000 ms + Circuit Breaker habilitado (config por defecto)
 // Perfil de carga estándar: warm-up → sustain → cool-down
-export let options = {
+export const options = {
   stages: [
     { duration: "10s", target: 50 },   // warm-up
     { duration: "120s", target: 150 }, // carga sostenida (ideal para ver CB abrir)

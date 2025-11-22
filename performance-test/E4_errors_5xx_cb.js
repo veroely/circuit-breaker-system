@@ -3,9 +3,9 @@ import { check, sleep } from "k6";
 import { buildHeaders, buildPayload } from "./common-request.js";
 import { Trend, Rate } from "k6/metrics";
 
-export let success = new Rate('success_rate');
+export const success = new Rate('success_rate');
 
-export let options = {
+export const options = {
   stages: [
     { duration: '10s', target: 30 },
     { duration: '120s', target: 150 },
