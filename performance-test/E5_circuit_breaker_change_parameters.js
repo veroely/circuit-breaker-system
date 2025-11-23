@@ -39,5 +39,6 @@ export default function () {
   sleep(1);
 }
 
-//comandos para ejecutar script
+
+//Comandos para ejecutar script de carga
 //k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write C:\Users\Veronica\Desktop\POSGRADO\SegundoSemestre\TrabajoDeTitulacion\code\circuit-breaker-system\performance-test\E5_circuit_breaker_change_parameters.js
