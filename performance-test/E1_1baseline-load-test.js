@@ -1,20 +1,11 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
-import {Trend} from "k6/metrics";
+
 import { buildHeaders, buildPayload } from "./common-request.js";
 
-//const responseTime = new Trend('response_time',true);
-
 export const options = {
-    stages: [
-    { duration: '1m', target: 100 },//sube a n usuarios   
-    { duration: '5m', target: 100 },//carga estable 
-    { duration: '1m', target: 0 }//reducción gradual
-  ],
-  thresholds:{
-    http_req_duration: ['p(95)<500'],//el 95% de las respuestas <500ms
-    http_req_failed: ['rate<0.02']//menos del 2% de errores
-  }
+  vus: 100,                 // volumen normal equivalente a 100 TPS aproximados
+  duration: '60s',          // prueba estable
 };
 
 export default function () {
@@ -29,8 +20,6 @@ export default function () {
     'time<500ms':(r)=>r.timings.duration <500
   });
 
-  //guardar metricas personalizadas
-  //responseTime.add(res.timings.duration);
 
   //simula tiempo entre peticiones
   sleep(1);

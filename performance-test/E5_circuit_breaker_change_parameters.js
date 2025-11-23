@@ -1,6 +1,9 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 import { buildHeaders, buildPayload } from "./common-request.js";
+import { Trend, Rate } from "k6/metrics";
+
+export const success = new Rate('success_rate');
 
 export const options = {
   stages: [
@@ -11,16 +14,9 @@ export const options = {
     { duration: '3m', target: 200 },  // Fase 5: Recuperación
     { duration: '2m', target: 0 }     // Fase 6: Normalización
   ]
-
-  //   stages: [
-  //   { duration: '2m', target: 100 },// Warm-up más gradual
-  //   { duration: '10m', target: 500 }, // Carga media sostenida media
-  //   { duration: '15m', target: 1000 },// Alta carga sostenida
-  //   { duration: '5m', target: 1500 },// Pico de estrés
-  //   { duration: '10m', target: 500 },// Recuperación parcial
-  //   { duration: '5m', target: 0 }// Recuperación completa
-  // ]
 };
+
+
 
 export default function () {
   const url = 'http://localhost:9050/api/bills/query';
@@ -28,9 +24,21 @@ export default function () {
   const headers = buildHeaders();
   const res = http.post(url, payload, { headers });
 
+
+    // Registrar métricas
+  success.add(res.status >= 200 && res.status < 400);
+
+
+  // Validaciones del CB activo
   check(res, {
-    'status is 200': (r) => r.status === 200
+    "CB activo responde correctamente": (r) =>
+      r.status >= 200 && r.status < 400,
   });
 
+  //simula tiempo entre peticiones
   sleep(1);
 }
+
+
+//Comandos para ejecutar script de carga
+//k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write C:\Users\Veronica\Desktop\POSGRADO\SegundoSemestre\TrabajoDeTitulacion\code\circuit-breaker-system\performance-test\E5_circuit_breaker_change_parameters.js

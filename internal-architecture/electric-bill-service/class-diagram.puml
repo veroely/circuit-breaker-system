@@ -1,0 +1,213 @@
+@startuml Electric Bill Service - Class Diagram
+
+' Configuración de estilo
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor<<Controller>> LightBlue
+    BackgroundColor<<Service>> LightGreen
+    BackgroundColor<<Repository>> LightYellow
+    BackgroundColor<<Domain>> Orange
+    BackgroundColor<<DTO>> Pink
+    BackgroundColor<<Interface>> LightGray
+    BackgroundColor<<Exception>> Red
+    BackgroundColor<<Client>> Cyan
+    BackgroundColor<<Mapper>> Lavender
+}
+
+' ===== DOMAIN LAYER =====
+package "domain" {
+    class ElectricBill <<Domain>> {
+        - reference: String
+        - amount: BigDecimal
+        - dueDate: LocalDate
+        - customerIdentification: String
+        - customerName: String
+    }
+
+    package "exception" {
+        class BillNotFoundException <<Exception>> {
+            + BillNotFoundException(message: String)
+            + BillNotFoundException(message: String, cause: Throwable)
+        }
+
+        class ElectricBillServiceException <<Exception>> {
+            + ElectricBillServiceException(message: String)
+            + ElectricBillServiceException(message: String, cause: Throwable)
+        }
+    }
+}
+
+' ===== DTO LAYER =====
+package "dto" {
+    class ElectricBillResponse <<DTO>> {
+        - reference: String
+        - amount: double
+        - dueDate: String
+        - customerIdentification: String
+        - customerName: String
+    }
+
+    class PaymentRequest <<DTO>> {
+        - billReference: String
+        - accountId: String
+        - amount: BigDecimal
+        - providerId: String
+        - paymentMethod: String
+        + getBillReference(): String
+        + getAmount(): BigDecimal
+        + setProviderId(providerId: String): void
+        + setBillReference(reference: String): void
+    }
+
+    class PaymentResponse <<DTO>> {
+        - transactionId: String
+        - status: String
+        - billReference: String
+        - amount: BigDecimal
+        - timestamp: LocalDateTime
+        - message: String
+        + getStatus(): String
+        + getMessage(): String
+    }
+}
+
+' ===== APPLICATION LAYER =====
+package "application" {
+    package "port.input" {
+        interface ElectricBillServicePort <<Interface>> {
+            + getBillDetails(providerId: String, referenceNumber: String): ElectricBill
+            + processPayment(paymentRequest: PaymentRequest): PaymentResponse
+        }
+    }
+
+    package "port.output" {
+        interface ElectricBillRepository <<Interface>> {
+            + findByReference(reference: String): ElectricBill
+            + save(electricBill: ElectricBill): ElectricBill
+        }
+    }
+
+    package "service" {
+        class ElectricBillService <<Service>> {
+            - electricBillRepository: ElectricBillRepository
+            - paymentServiceClient: PaymentServiceClient
+            + ElectricBillService(repository: ElectricBillRepository, client: PaymentServiceClient)
+            + getBillDetails(providerId: String, referenceNumber: String): ElectricBill
+            + processPayment(paymentRequest: PaymentRequest): PaymentResponse
+            - alternativeOption(providerId: String, referenceNumber: String, throwable: Throwable): ElectricBill
+        }
+    }
+}
+
+' ===== INFRASTRUCTURE LAYER =====
+package "infrastructure" {
+    package "adapter.rest" {
+        class ElectricBillController <<Controller>> {
+            - electricBillService: ElectricBillServicePort
+            - mapper: ElectricMapper
+            + ElectricBillController(service: ElectricBillServicePort, mapper: ElectricMapper)
+            + getBill(providerId: String, referenceNumber: String): ElectricBillResponse
+            + processPayment(providerId: String, referenceNumber: String, paymentRequest: PaymentRequest): PaymentResponse
+        }
+    }
+
+    package "adapter.client" {
+        interface PaymentServiceClient <<Client>> {
+            + processPayment(paymentRequest: PaymentRequest): PaymentResponse
+        }
+    }
+
+    package "adapter.feign" {
+        interface ElectricityProviderClient <<Client>> {
+            + getBill(reference: String): ElectricBillResponse
+        }
+    }
+
+    package "adapter.mapper" {
+        interface ElectricMapper <<Mapper>> {
+            + toElectricBill(billResponse: ElectricBillResponse): ElectricBill
+            + toElectricBillResponse(bill: ElectricBill): ElectricBillResponse
+        }
+    }
+
+    package "repository" {
+        class ElectricBillRepositoryImpl <<Repository>> {
+            - electricityProviderClient: ElectricityProviderClient
+            - mapper: ElectricMapper
+            + ElectricBillRepositoryImpl(client: ElectricityProviderClient, mapper: ElectricMapper)
+            + findByReference(reference: String): ElectricBill
+            + save(electricBill: ElectricBill): ElectricBill
+        }
+    }
+
+    package "exceptions" {
+        class PaymentProcessingException <<Exception>> {
+        }
+    }
+}
+
+' ===== RELACIONES =====
+
+' Controller relationships
+ElectricBillController --> ElectricBillServicePort : uses
+ElectricBillController --> ElectricMapper : uses
+ElectricBillController ..> ElectricBillResponse : returns
+ElectricBillController ..> PaymentRequest : receives
+ElectricBillController ..> PaymentResponse : returns
+
+' Service relationships
+ElectricBillService ..|> ElectricBillServicePort : implements
+ElectricBillService --> ElectricBillRepository : uses
+ElectricBillService --> PaymentServiceClient : uses
+ElectricBillService ..> ElectricBill : returns
+ElectricBillService ..> PaymentRequest : receives
+ElectricBillService ..> PaymentResponse : returns
+ElectricBillService ..> PaymentProcessingException : throws
+
+' Repository relationships
+ElectricBillRepositoryImpl ..|> ElectricBillRepository : implements
+ElectricBillRepositoryImpl --> ElectricityProviderClient : uses
+ElectricBillRepositoryImpl --> ElectricMapper : uses
+ElectricBillRepositoryImpl ..> ElectricBill : returns
+ElectricBillRepositoryImpl ..> BillNotFoundException : throws
+ElectricBillRepositoryImpl ..> ElectricBillServiceException : throws
+
+' Mapper relationships
+ElectricMapper ..> ElectricBill : converts
+ElectricMapper ..> ElectricBillResponse : converts
+
+' Client relationships
+PaymentServiceClient ..> PaymentRequest : receives
+PaymentServiceClient ..> PaymentResponse : returns
+ElectricityProviderClient ..> ElectricBillResponse : returns
+
+' Exception hierarchy
+BillNotFoundException --|> RuntimeException
+ElectricBillServiceException --|> RuntimeException
+PaymentProcessingException --|> RuntimeException
+
+' Notes
+note right of ElectricBillService
+  Implementa Circuit Breaker
+  con Resilience4j en el
+  método getBillDetails()
+end note
+
+note right of ElectricBillController
+  REST Controller
+  Endpoint: /api/electricity
+end note
+
+note right of PaymentServiceClient
+  Feign Client
+  Servicio externo:
+  payment-management-service
+end note
+
+note right of ElectricityProviderClient
+  Feign Client
+  Servicio externo:
+  electricity-provider
+end note
+
+@enduml
