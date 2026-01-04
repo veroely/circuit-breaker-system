@@ -2,11 +2,19 @@ import http from "k6/http";
 import { check, sleep } from "k6";
 import { buildHeaders, buildPayload } from "./common-request.js";
 
-export const options = {
-  vus: 100,                 // volumen normal equivalente a 100 TPS aproximados
-  duration: '60s',          // prueba estable
-};
+// export const options = {
+//   vus: 100,                 // volumen normal equivalente a 100 TPS aproximados
+//   duration: '60s',          // prueba estable
+// };
 
+// E3: Latencia 3000 ms sin Circuit Breaker
+export const options = {
+  stages: [
+    { duration: "10s", target: 50 },   // warm-up
+    { duration: "120s", target: 150 }, // carga sostenida (ideal para ver CB abrir)
+    { duration: "10s", target: 0 },    // cool-down
+  ]
+};
 
 export default function () {
   const url = 'http://localhost:9050/api/bills/query';
