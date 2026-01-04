@@ -19,8 +19,7 @@ EJecución de las pruebas en K6
 
 # Crear la latencia
 Ejecuta el siguiente comando en tu terminal:
-    ```bash
-    curl --location 'http://localhost:8474/proxies/electric_api_proxy/toxics' \
+curl --location 'http://localhost:8474/proxies/electric_api_proxy/toxics' \
     --header 'Content-Type: application/json' \
     --data '{
         "name": "test_latency",
